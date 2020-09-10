@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+
+  flask-app:
+    container_name: flask-app
+    restart: always
+    build:
+      context: ./flask_app
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./flask_app:/usr/src/flask_app
+    depends_on:
+      - "postgres"
+
